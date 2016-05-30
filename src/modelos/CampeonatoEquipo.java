@@ -1,9 +1,6 @@
 
 package modelos;
 
-import java.util.List;
-
-
 public class CampeonatoEquipo {
     
     private int id;
@@ -107,6 +104,15 @@ public class CampeonatoEquipo {
      */
     public void setGolesEnContra(int golesEnContra) {
         this.golesEnContra = golesEnContra;
+    }
+    
+    /**
+     * Reset params
+     */
+    public void reset(){
+        this.puntos = 0;
+        this.golesAFavor = 0;
+        this.golesEnContra = 0;
     }
     
     

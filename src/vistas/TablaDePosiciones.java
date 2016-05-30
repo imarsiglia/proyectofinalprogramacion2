@@ -5,6 +5,7 @@
  */
 package vistas;
 
+import com.sun.imageio.plugins.jpeg.JPEG;
 import controladores.CampeonatoController;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
@@ -81,7 +82,7 @@ public class TablaDePosiciones extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Posicion", "Equipo", "Puntos", "PJ", "PP", "PE", "GF", "GC"
+                "Posicion", "Equipo", "Puntos", "PG", "PP", "PE", "GF", "GC"
             }
         ) {
             Class[] types = new Class [] {
@@ -183,27 +184,148 @@ public class TablaDePosiciones extends javax.swing.JFrame {
         this.model = (DefaultTableModel) jTable1.getModel();
         ArrayList<CampeonatoEquipo> equipos = 
                 CampeonatoController.getInstance().getSelected().getEquipos();
+        Object[][] vector = new Object[equipos.size()][8];
         
         // Ordenar
-        // Contar partidos jugados, perdidos y empatados
         
         Integer index = 1;
-        for (CampeonatoEquipo equipoCameponato : equipos) {
+        for (CampeonatoEquipo ce : equipos) {
+            ce.reset();
             
             Object[] row = new Object[8];
             row[0] = index;
-            row[1] = equipoCameponato.getEquipo().getNombre();
-            row[2] = equipoCameponato.getPuntos();
-            row[3] = 0; // no definido
-            row[4] = 0; // no definido
-            row[5] = 0; // no definido
-            row[6] = equipoCameponato.getGolesAFavor();
-            row[7] = equipoCameponato.getGolesEnContra();
+            row[1] = ce.getEquipo().getNombre();
+            int pg = 0;
+            int pp = 0;
+            int pe = 0;
             
-            this.model.addRow(row);
+            for(modelos.Encuentro en : 
+                    CampeonatoController.getInstance().getSelected().getEncuentrosJugados()){
+                
+                if(en.getLocal().getId() == ce.getEquipo().getId()){
+                    // Es local
+                    
+                    if(en.getGolesLocal().size() > en.getGolesVisitante().size()){
+                        ce.setPuntos(ce.getPuntos() + 3);
+                        pg++;
+                    }else if(en.getGolesLocal().size() == en.getGolesVisitante().size()){
+                        ce.setPuntos(ce.getPuntos() + 1);
+                        pe++;
+                    }else{
+                        pp++;
+                    }
+                    
+                    ce.setGolesAFavor(ce.getGolesAFavor() + en.getGolesLocal().size());
+                    ce.setGolesEnContra(ce.getGolesEnContra() + en.getGolesVisitante().size());
+                    
+                }else if(en.getVisitante().getId() == ce.getEquipo().getId()){
+                    // Es visitante
+                    
+                    if(en.getGolesVisitante().size() > en.getGolesLocal().size()){
+                        ce.setPuntos(ce.getPuntos() + 3);
+                        pg++;
+                    }else if(en.getGolesVisitante().size() == en.getGolesLocal().size()){
+                        ce.setPuntos(ce.getPuntos() + 1);
+                        pe++;
+                    }else{
+                        pp++;
+                    }
+                    
+                    ce.setGolesAFavor(ce.getGolesAFavor() + en.getGolesVisitante().size());
+                    ce.setGolesEnContra(ce.getGolesEnContra() + en.getGolesLocal().size());
+                    
+                }
+            }
+            
+            row[3] = pg; // no definido PJ
+            row[4] = pp; // no definido PP
+            row[5] = pe; // no definido PE
+            row[2] = ce.getPuntos();
+            row[6] = ce.getGolesAFavor();
+            row[7] = ce.getGolesEnContra();
+            
+            vector[index-1] = row;
             index++;
             
         }
         
+        this.ordenar(vector);
+        // faltan las posiciones
+        
+        index = 1;
+        int i = 0;
+
+        for(Object[] row : vector){
+            
+            if(i > 0){
+                if(!igual(vector[i], vector[i-1])){
+                    index = i + 1;
+                }
+            }
+            
+            row[0] = index;
+            this.model.addRow(row);
+            
+            i++;
+            
+        }
+        
     }
+    
+    private void ordenar(Object[][] vector){
+        
+        Object[] aux;
+        
+        for(int i = 0; i<vector.length; i++){
+            for(int j = 0; j<vector.length - i - 1; j++){
+                if(mayor(vector[j+1], vector[j])){
+                    aux = vector[j+1];
+                    vector[j+1] = vector[j];
+                    vector[j] = aux;
+                }
+            }
+        }
+        
+    }
+    
+    private boolean mayor(Object[] e1, Object[] e2){
+        
+        int puntos1 = (Integer) e1[2];
+        int puntos2 = (Integer) e2[2];
+        int golesAFavor1 = (Integer) e1[6];
+        int golesAEnContra1 = (Integer) e1[7];
+        int golesAFavor2 = (Integer) e2[6];
+        int golesAEnContra2 = (Integer) e2[7];
+        
+        boolean puntos = puntos1 > puntos2;
+        boolean puntosIguales = puntos1 == puntos2;
+        boolean goles = (golesAFavor1 - golesAEnContra1) > (golesAFavor2 - golesAEnContra2);
+        boolean golesIguales = (golesAFavor1 - golesAEnContra1) == (golesAFavor2 - golesAEnContra2);
+        boolean masGoles = golesAFavor1 > golesAFavor2;
+        
+        if(puntos){
+            return true;
+        }else if(puntosIguales && goles){
+            return true;
+        }else if(puntosIguales && golesIguales && masGoles){
+            return true;
+        }
+        
+        return false;
+        
+    }
+    
+    private boolean igual(Object[] e1, Object[] e2){
+        
+        int puntos1 = (Integer) e1[2];
+        int puntos2 = (Integer) e2[2];
+        int golesAFavor1 = (Integer) e1[6];
+        int golesAEnContra1 = (Integer) e1[7];
+        int golesAFavor2 = (Integer) e2[6];
+        int golesAEnContra2 = (Integer) e2[7];
+        
+        return puntos1 == puntos2 && golesAFavor1 == golesAFavor2 && golesAEnContra1 == golesAEnContra2;
+        
+    }
+    
 }

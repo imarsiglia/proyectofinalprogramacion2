@@ -12,6 +12,7 @@ public class Encuentro {
     private Fecha fecha;
     private ArrayList<Gol> golesLocal;
     private ArrayList<Gol> golesVisitante;
+    private boolean jugado;
 
     public Encuentro() {
         this.golesLocal = new ArrayList<>();
@@ -19,13 +20,14 @@ public class Encuentro {
                 
     }
 
-    public Encuentro(int id, Equipo local, Equipo visitante, Fecha fecha) {
+    public Encuentro(int id, Equipo local, Equipo visitante, Fecha fecha, boolean jugado) {
         this.id = id;
         this.local = local;
         this.visitante = visitante;
         this.fecha = fecha;
         this.golesLocal = new ArrayList<>();
         this.golesVisitante = new ArrayList<>();
+        this.jugado = jugado;
     }
 
     /**
@@ -97,6 +99,29 @@ public class Encuentro {
     public void setFecha(Fecha fecha) {
         this.fecha = fecha;
     }
+
+    /**
+     * 
+     * @return the object in string
+     */
+    @Override
+    public String toString() {
+        return id + " " + local.getNombre() +  " " + visitante.getNombre() + " GL: " + 
+                this.golesLocal.size() + " GV: " + this.golesVisitante.size();
+    }
+
+    /**
+     * @return the jugado
+     */
+    public boolean isJugado() {
+        return jugado;
+    }
+
+    /**
+     * @param jugado the jugado to set
+     */
+    public void setJugado(boolean jugado) {
+        this.jugado = jugado;
+    }
     
 }
-

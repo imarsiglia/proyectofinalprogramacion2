@@ -10,8 +10,6 @@ import controladores.EquipoController;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
-
-import javax.swing.table.TableModel;
 import modelos.CampeonatoEquipo;
 import modelos.Equipo;
 
@@ -182,7 +180,7 @@ public class ListaEquipos extends javax.swing.JFrame {
         
         for(int i = 0; i<selecteds.length; i++){
             
-            Equipo equipo = memoria.remove(selecteds[i]);
+            Equipo equipo = memoria.get(selecteds[i]);
             CampeonatoEquipo campeonatoEquipo = new CampeonatoEquipo(
                     CampeonatoController.incremente++, 
                     equipo, 
@@ -190,6 +188,10 @@ public class ListaEquipos extends javax.swing.JFrame {
                     0, 0, 0);
             CampeonatoController.getInstance().getSelected().getEquipos().add(campeonatoEquipo);
             
+        }
+        
+        for(int i = selecteds.length -1; i>=0; i--){
+            memoria.remove(i);
         }
         
         this.buildData();

@@ -24,6 +24,7 @@ public class GestionCampeonato extends javax.swing.JFrame {
     public GestionCampeonato() {
         initComponents();
         this.setLocationRelativeTo(null);
+        postInit();
     }
 
     /**
@@ -50,7 +51,7 @@ public class GestionCampeonato extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Editar Equipos");
+        jButton2.setText("Equipos");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -65,7 +66,7 @@ public class GestionCampeonato extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setText("Fechas");
+        jButton4.setText("Encuentros");
         jButton4.setEnabled(false);
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -138,7 +139,7 @@ public class GestionCampeonato extends javax.swing.JFrame {
  
             if(CampeonatoController.getInstance().getSelected().getEquipos().size()>3){
                 
-                Campeonato campeonato = new Campeonato();
+                Campeonato campeonato = CampeonatoController.getInstance().getSelected();
                 campeonato.crearFechas();
                 
                 jButton1.setEnabled(false);
@@ -158,15 +159,8 @@ public class GestionCampeonato extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
  
-        EquipoCampeonato equipos = new EquipoCampeonato();
-        equipos.setVisible(true);
+        new Fechas().setVisible(true);
         this.setVisible(false);
-        if(evt.getSource()==jButton1){
-            jButton1.setEnabled(false);
-            jButton2.setEnabled(false);
-            jButton3.setEnabled(true);
-            jButton4.setEnabled(true);
-            }
         
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -233,4 +227,13 @@ public class GestionCampeonato extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     // End of variables declaration//GEN-END:variables
+
+    private void postInit() {
+        if(!CampeonatoController.getInstance().getSelected().getFecha().isEmpty()){
+            jButton1.setEnabled(false);
+            jButton2.setEnabled(false);
+            jButton3.setEnabled(true);
+            jButton4.setEnabled(true);
+        }
+    }
 }

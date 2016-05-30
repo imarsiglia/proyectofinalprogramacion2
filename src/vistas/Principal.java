@@ -5,6 +5,11 @@
  */
 package vistas;
 
+import controladores.EquipoController;
+import javax.swing.JOptionPane;
+import modelos.Equipo;
+import modelos.Persona;
+
 
 
 /**
@@ -20,6 +25,7 @@ public class Principal extends javax.swing.JFrame {
         
         initComponents();
         this.setLocationRelativeTo(null);
+        this.postInit();
         
     }
 
@@ -144,7 +150,7 @@ public class Principal extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -158,4 +164,28 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     // End of variables declaration//GEN-END:variables
+
+    private void postInit() {
+        
+        if(EquipoController.getInstance().getEquipos().isEmpty()){
+            
+            Equipo equipo1 = new Equipo(EquipoController.incremente++, "JUNIOR");
+            equipo1.getPersona().add(new Persona(1, equipo1, "Imar", "Marsiglia"));
+            EquipoController.getInstance().addEquipo(equipo1);
+
+            Equipo equipo2 = new Equipo(EquipoController.incremente++, "NACIONAL");
+            equipo2.getPersona().add(new Persona(2, equipo2, "Andrés", "Marsiglia"));
+            EquipoController.getInstance().addEquipo(equipo2);
+
+            Equipo equipo3 = new Equipo(EquipoController.incremente++, "MEDELLIN");
+            equipo3.getPersona().add(new Persona(3, equipo3, "Mauro", "Marsiglia"));
+            EquipoController.getInstance().addEquipo(equipo3);
+
+            Equipo equipo4 = new Equipo(EquipoController.incremente++, "CALI");
+            equipo4.getPersona().add(new Persona(4, equipo4, "Renato", "Marsiglia"));
+            EquipoController.getInstance().addEquipo(equipo4);
+            
+        }
+        
+    }
 }

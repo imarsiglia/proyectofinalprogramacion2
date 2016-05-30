@@ -3,8 +3,7 @@ package controladores;
 
 import java.util.ArrayList;
 import modelos.Campeonato;
-import modelos.Equipo;
-
+import modelos.Encuentro;
 
 public class CampeonatoController {
     
@@ -12,6 +11,7 @@ public class CampeonatoController {
     private ArrayList<Campeonato> campeonatos;
     public static int incremente = 1;
     private Campeonato selected;
+    private Encuentro encuentroSelected;
     
     private CampeonatoController(){
         this.campeonatos = new ArrayList<>();
@@ -52,6 +52,19 @@ public class CampeonatoController {
     public void setSelected(Campeonato selected) {
         this.selected = selected;
     }
-    
+
+    /**
+     * @return the encuentroSelected
+     */
+    public Encuentro getEncuentroSelected() {
+        return encuentroSelected;
+    }
+
+    /**
+     * @param encuentroSelected the encuentroSelected to set
+     */
+    public void setEncuentroSelected(Encuentro encuentroSelected) {
+        this.encuentroSelected = encuentroSelected;
+    }
     
 }

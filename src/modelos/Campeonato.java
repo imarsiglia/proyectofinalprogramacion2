@@ -2,6 +2,8 @@ package modelos;
 
 import controladores.CampeonatoController;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Campeonato {
 
@@ -28,7 +30,11 @@ public class Campeonato {
             Fecha fecha = new Fecha(CampeonatoController.incremente++, this);
             for (CampeonatoEquipo campeonatoEquipoVisiante : getEquipos()) {
                 if (campeonatoEquipoLocal != campeonatoEquipoVisiante) {
-                    Encuentro encuentro = new Encuentro(CampeonatoController.incremente++, campeonatoEquipoLocal.getEquipo(), campeonatoEquipoVisiante.getEquipo(), fecha);
+                    Encuentro encuentro = new Encuentro(
+                            CampeonatoController.incremente++, 
+                            campeonatoEquipoLocal.getEquipo(), 
+                            campeonatoEquipoVisiante.getEquipo(), 
+                            fecha, false);
                     fecha.getEncuentros().add(encuentro);
                 }
             }
@@ -79,6 +85,33 @@ public class Campeonato {
             }
         }
         return false;
+    }
+    
+    public List<Encuentro> getEncuentros(){
+        
+        List<Encuentro> encuentros = new LinkedList<>();
+        for(Fecha f : this.getFecha()){
+            for(Encuentro e : f.getEncuentros()){
+                encuentros.add(e);
+            }
+        }
+        
+        return encuentros;
+        
+    }
+    
+    public List<Encuentro> getEncuentrosJugados(){
+        
+        List<Encuentro> encuentros = new LinkedList<>();
+        for(Fecha f : this.getFecha()){
+            for(Encuentro e : f.getEncuentros()){
+                if(e.isJugado())
+                    encuentros.add(e);
+            }
+        }
+        
+        return encuentros;
+        
     }
 
 }
